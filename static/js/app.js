@@ -92,7 +92,9 @@ const CHROME_HTML = `
         a fast, readable way to follow every change across the roster. Patch notes are
         scraped from Steam and split into heroes/items/general changes with plain
         pattern matching — no AI parsing involved.</p>
-        <p>Got a suggestion, comment, or just want to connect? I'd love to hear it.</p>
+        <p>This is a work in progress — a solo project, not a full stats platform, so
+        it's light on features for now. Got a suggestion, bug report, or just want to
+        connect? I'd love to hear it.</p>
         <div class="modal-links">
             <a href="https://www.linkedin.com/in/fernando-godinez-685233322/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         </div>

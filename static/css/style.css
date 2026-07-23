@@ -442,6 +442,19 @@ ul.change-list {
     font-size: clamp(13px, 1.4vw, 16px);
     letter-spacing: 0.05em;
 }
+.wip-badge {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 6px 14px;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    border-radius: 99px;
+    color: #fbbf24;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    max-width: 480px;
+}
+.wip-badge b { font-style: normal; }
 .home-main {
     max-width: 1150px;
     margin: 28px auto 60px;

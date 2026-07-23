@@ -1372,6 +1372,11 @@
       "Mystic Reverb": [
         "Lifesteal reduced from 10% to 8%",
         "Imbued Lifesteal reduced from 27% to 22%"
+      ],
+      "Enhanced Escalating Exposure": [
+        "Max Stacks from +8 to +6",
+        "Amp per stack from +2 to +1.5",
+        "Base shred from +8 to +10 (matching enhanced mystic invul)"
       ]
     },
     "general": [
@@ -1395,9 +1400,6 @@
       "The following abilities have -15% radius in Street Brawl: Bookwyrm, Flame Dash, Essence Bomb, Entangling Thorns, Lightning Ball, Pulse Grenade, Frost Grenade",
       "Mystic Expansion Radius bonus reduced from +20% to +16%",
       "Greater Expansion Radius bonus reduced from +30% to +25%",
-      "Enhanced Escalating Exposure: Max Stacks from +8 to +6",
-      "Enhanced Escalating Exposure: Amp per stack from +2 to +1.5",
-      "Enhanced Escalating Exposure: Base shred from +8 to +10 (matching enhanced mystic invul)",
       "Fixed Enhanced Weighted Shots not maintaining the benefits from Enhanced Slowing Bullets"
     ]
   },
@@ -2455,6 +2457,11 @@
       "Extended Magazine": [
         "Weapon Damage increased from +6% to +8%"
       ],
+      "High-Velocity Rounds": [
+        "No longer grants +5% Fire Rate",
+        "Now grants +8% Weapon Damage",
+        "Bullet Velocity increased from +50% to +60% (these changes affect upgrades)"
+      ],
       "Long Range": [
         "Fall-off Range increased from +4% to +8%"
       ],
@@ -2706,6 +2713,43 @@
       ],
       "Boundless Spirit": [
         "Constant spirit bonus reduced from 35 to 30"
+      ],
+      "Unstable Concoction": [
+        "Now grants you unstoppable during the pre explosion state",
+        "Radius increased from 18m to 22m"
+      ],
+      "Shadow Strike": [
+        "Stamina increased from +2 to +3",
+        "Now grants +350 Health",
+        "DPS increased from 75 to 125",
+        "DPS spirit scaling increased from 0.2 to 0.4",
+        "Invis duration increased from 2.5s to 3s"
+      ],
+      "Electric Slippers": [
+        "Damage radius increased from 8m to 12m",
+        "Slide Fire Rate increased from 50% to 60%"
+      ],
+      "Nullification Burst": [
+        "Radius increased from 12m to 20m",
+        "Now grants +40% Debuff Resistance"
+      ],
+      "Celestial Blessing": [
+        "Cooldown reduced from 50s to 30s",
+        "Heal increased from up to 50% of your HP to 60%",
+        "Heal min increased from 300 to 400"
+      ],
+      "Runed Gauntlet": [
+        "Melee distance increased from 130% to 150%",
+        "Cooldown on hit reduced from -12% to -16%",
+        "Cooldown on hit reduced from -3s to -4s"
+      ],
+      "Seraphim Wings": [
+        "In Air Damage Reduction increased from -40% to -60%",
+        "Additional air dash/jump increased from +1 to unlimited"
+      ],
+      "Cloak of Opportunity": [
+        "Barrier increased from 300 to 500",
+        "Cooldown reduced from 14s to 12s"
       ]
     },
     "general": [
@@ -2741,9 +2785,6 @@
       "Fixed melee abilities not using conditional damage based on enemy state (close quarters, point blank, opening rounds)",
       "Street Brawl: Removed item slot limit (don't need to sell items in the final round sometimes)",
       "Added new T1 Spirit Item: Golden Goose Egg",
-      "High-Velocity Rounds: No longer grants +5% Fire Rate",
-      "High-Velocity Rounds: Now grants +8% Weapon Damage",
-      "High-Velocity Rounds: Bullet Velocity increased from +50% to +60% (these changes affect upgrades)",
       "Backstabber: Renamed to Stalker",
       "Vindcita: Ammo reduced from 22 to 19",
       "Vindcita: Crow Familiar cooldown increased from 28s to 32s",
@@ -2769,27 +2810,6 @@
       "Spirit investment rescaled from 7/11/15/19/38/52/64/76/89/101 to 7/11/15/19/38/48/57/66/75/100",
       "Small neutrals spirit resist increased from 35% to 45%",
       "Improved the following Enhanced Items: Blood Tribute, Shadow Weave, Cultist Sacrifice, Magic Carpet, Healing Rite, Majestic Leap, Metal Skin, Monster Rounds, Veil Walker, Fury Trance, Return Fire, Restorative Locket, Rebuttal, Disarming Hex, Split Shot, Rescue Beam, Spirit Sap, Cursed Relic, Heroic Aura, Rusted Barrel, Weapon Shielding, Nullification Blast, Cloak of Opportunity",
-      "Unstable Concoction: Now grants you unstoppable during the pre explosion state",
-      "Unstable Concoction: Radius increased from 18m to 22m",
-      "Shadow Strike: Stamina increased from +2 to +3",
-      "Shadow Strike: Now grants +350 Health",
-      "Shadow Strike: DPS increased from 75 to 125",
-      "Shadow Strike: DPS spirit scaling increased from 0.2 to 0.4",
-      "Shadow Strike: Invis duration increased from 2.5s to 3s",
-      "Electric Slippers: Damage radius increased from 8m to 12m",
-      "Electric Slippers: Slide Fire Rate increased from 50% to 60%",
-      "Nullification Burst: Radius increased from 12m to 20m",
-      "Nullification Burst: Now grants +40% Debuff Resistance",
-      "Celestial Blessing: Cooldown reduced from 50s to 30s",
-      "Celestial Blessing: Heal increased from up to 50% of your HP to 60%",
-      "Celestial Blessing: Heal min increased from 300 to 400",
-      "Runed Gauntlet: Melee distance increased from 130% to 150%",
-      "Runed Gauntlet: Cooldown on hit reduced from -12% to -16%",
-      "Runed Gauntlet: Cooldown on hit reduced from -3s to -4s",
-      "Seraphim Wings: In Air Damage Reduction increased from -40% to -60%",
-      "Seraphim Wings: Additional air dash/jump increased from +1 to unlimited",
-      "Cloak of Opportunity: Barrier increased from 300 to 500",
-      "Cloak of Opportunity: Cooldown reduced from 14s to 12s",
       "Infinite Rounds: Fire Rate increased from 30% to 35%",
       "Mystical Piano: Radius increased from 11m to 12m",
       "Shrink Ray: Now grants +20% Fire Rate while shrunk",
@@ -3033,6 +3053,9 @@
       ]
     },
     "items": {
+      "Sinner's Sacrifice": [
+        "Return damage increased from 60 to 80"
+      ],
       "Enchanter's Emblem": [
         "Cooldown Reduction reduced from +7% to +5%"
       ],
@@ -3208,7 +3231,6 @@
       "Medium neutrals damage increased by 25%",
       "Hard neutrals spirit resist increased from 35% to 50%",
       "Hard neutrals damage increased by 30%",
-      "Sinner's Sacrifice: Return damage increased from 60 to 80",
       "Minimum unsecured gold to drop increased from 100 to 150",
       "Sprint/Out of Combat regen timer against neutrals increased from 0.5s to 2.5s (takes longer to start sprinting/regening)",
       "Reduced all AP damage upgrades by 10%",

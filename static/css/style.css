@@ -89,6 +89,10 @@ nav {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
+    /* safety net: if content still doesn't fit at some width, let it scroll instead
+       of silently cutting off the right side (the info button) with no way to reach it */
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 nav .logo { height: 2.6em; width: auto; display: block; }
 nav .logo:hover { filter: drop-shadow(0 0 8px var(--accent-glow)); }
@@ -630,9 +634,6 @@ ul.change-list {
 @media (max-width: 1500px) {
     .home-rail { grid-template-columns: 64px; }
 }
-@media (max-width: 1250px) {
-    .home-rail { display: none; }
-}
 .hero-rail a {
     position: relative;
     display: block;
@@ -872,20 +873,33 @@ ul.change-list {
     }
     .hero-cols { grid-template-columns: 1fr; }
     .hero-tile { width: 84px; }
+
+    /* home page's hero rail was a fixed right-edge sidebar that just got hidden
+       below 1250px - give it the same horizontal-scroll strip treatment .hero-rail
+       already gets above, instead of disappearing entirely. */
+    .home-rail {
+        position: static;
+        right: auto; top: auto; transform: none;
+        gap: 8px;
+        padding: 10px 20px;
+        margin: 0;
+    }
 }
 
-/* phones: the 1000px breakpoint above isn't tight enough - logo + 3 links + info
-   button don't fit on one line under ~430px, so text wraps inside the fixed-height
-   nav and becomes unclickable. Shrink everything enough to stay on one line instead. */
-@media (max-width: 480px) {
+/* phones (portrait AND landscape) plus any narrower resized window: the 1000px
+   breakpoint above isn't tight enough on its own - logo + 3 links + info button
+   don't reliably fit on one line under ~700px, so content got clipped on the right
+   with no way to reach it. Shrink everything enough to stay on one line instead;
+   nav's own overflow-x: auto (see base rule) is the fallback if it's still tight. */
+@media (max-width: 700px) {
     nav { padding: 0 10px; gap: 4px; }
-    nav .logo { height: 1.9em; }
-    nav ul { margin-left: 6px; gap: 0; }
+    nav .logo { height: 1.9em; flex-shrink: 0; }
+    nav ul { margin-left: 6px; gap: 0; flex-shrink: 0; }
     nav ul a {
         font-size: 12px;
         padding: 5px 6px;
         letter-spacing: 0.01em;
         white-space: nowrap;
     }
-    .info-btn { width: 28px; height: 28px; font-size: 15px; }
+    .info-btn { width: 28px; height: 28px; font-size: 15px; flex-shrink: 0; }
 }

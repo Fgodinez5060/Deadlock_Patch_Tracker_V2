@@ -61,6 +61,16 @@ New-item announcements are also often written as prose ("Added a new T1 Vitality
 Grit...") rather than a `Name: change text` bullet, so they land in `general` too even
 once the item is in the roster — there's no bullet to match against yet.
 
+Some bullets are correctly *supposed* to land in `general` and should stay there: an
+ability's own sub-options are occasionally written as their own `Label: text` bullets
+without repeating the hero's name (e.g. Wraith's card-throw ability listing `Spades:`,
+`Diamond:`, `Hearts:`, `Clubs:`, `Joker:` as separate lines after a single `Wraith:`
+bullet). Attributing those back to Wraith would require guessing from paragraph
+position rather than matching text — the kind of guess this project deliberately
+doesn't make. `scrape/review.py` will still flag names like these for review since it
+can't tell the difference from a real gap by pattern alone; the judgment call of
+"is this actually a hero/item name" is the one step that stays manual.
+
 ## Useful commands
 
 ```powershell

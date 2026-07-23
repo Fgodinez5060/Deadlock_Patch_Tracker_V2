@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deadlock Items</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="static/js/app.js"></script>
+</head>
+<body data-page="items">
+    <div class="page-bg" style="background-image: url('static/Hidden_king_art.webp');"></div>
+
+    <main class="container heroes-main">
+        <div class="page-header">
+            <h1>Items</h1>
+            <div class="spacer"></div>
+            <input class="search-box" id="item-search" type="text" placeholder="Search items..." autocomplete="off">
+        </div>
+        <div class="items-grid" id="items-grid"></div>
+    </main>
+
+    <script>
+        const grid = document.getElementById('items-grid')
+
+        loadRoster()
+            .then(roster => {
+                const ITEMS = roster.items
+
+                ITEMS.forEach(name => {
+                    const tile = el('div', 'item-tile', name)
+                    tile.dataset.name = name.toLowerCase()
+
+                    tile.addEventListener('click', () => {
+                        window.location.href = itemHref(name)
+                    })
+
+                    grid.appendChild(tile)
+                })
+
+                document.getElementById('item-search').addEventListener('input', e => {
+                    const q = e.target.value.trim().toLowerCase()
+                    grid.querySelectorAll('.item-tile').forEach(tile => {
+                        tile.style.display = tile.dataset.name.includes(q) ? '' : 'none'
+                    })
+                })
+
+                // NEW pills depend on the latest patch, so they arrive once the data does.
+                loadPatches().then(patches => {
+                    const changed = new Set(latestChangedItems(patches))
+                    grid.querySelectorAll('.item-tile').forEach(tile => {
+                        const name = ITEMS.find(i => i.toLowerCase() === tile.dataset.name)
+                        if (changed.has(name)) tile.appendChild(el('div', 'new-pill', 'NEW'))
+                    })
+                })
+            })
+            .catch(err => showError('Could not load the item roster: ' + err.message))
+    </script>
+</body>
+</html>

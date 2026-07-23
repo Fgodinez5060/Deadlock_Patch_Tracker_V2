@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deadlock Heroes</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="static/js/app.js"></script>
+</head>
+<body data-page="heroes">
+    <div class="page-bg" style="background-image: url('static/City_buildings.webp');"></div>
+
+    <main class="container heroes-main">
+        <div class="page-header">
+            <h1>Heroes</h1>
+            <div class="spacer"></div>
+            <input class="search-box" id="hero-search" type="text" placeholder="Search heroes..." autocomplete="off">
+        </div>
+        <div class="heroes-grid" id="heroes-grid"></div>
+    </main>
+
+    <script>
+        const grid = document.getElementById('heroes-grid')
+
+        loadRoster()
+            .then(roster => {
+                const HEROES = roster.heroes
+
+                HEROES.forEach(name => {
+                    const tile = el('div', 'hero-tile')
+                    tile.dataset.name = name.toLowerCase()
+
+                    const img = el('img')
+                    img.src = `static/heroes/${name}.webp`
+                    img.alt = name
+                    img.loading = 'lazy'
+                    tile.appendChild(img)
+                    tile.appendChild(el('p', '', name))
+
+                    tile.addEventListener('click', () => {
+                        window.location.href = heroHref(name)
+                    })
+
+                    grid.appendChild(tile)
+                })
+
+                document.getElementById('hero-search').addEventListener('input', e => {
+                    const q = e.target.value.trim().toLowerCase()
+                    grid.querySelectorAll('.hero-tile').forEach(tile => {
+                        tile.style.display = tile.dataset.name.includes(q) ? '' : 'none'
+                    })
+                })
+
+                // NEW pills depend on the latest patch, so they arrive once the data does.
+                loadPatches().then(patches => {
+                    const changed = new Set(latestChangedHeroes(patches))
+                    grid.querySelectorAll('.hero-tile').forEach(tile => {
+                        const name = HEROES.find(h => h.toLowerCase() === tile.dataset.name)
+                        if (changed.has(name)) tile.appendChild(el('div', 'new-pill', 'NEW'))
+                    })
+                })
+            })
+            .catch(err => showError('Could not load the hero roster: ' + err.message))
+    </script>
+</body>
+</html>

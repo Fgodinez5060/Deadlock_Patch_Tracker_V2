@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deadlock Patches</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="static/js/app.js"></script>
+</head>
+<body data-page="patches">
+    <div class="page-bg" style="background-image: url('static/City_buildings.webp');"></div>
+
+    <main class="patches-main">
+        <div class="page-header">
+            <h1>Patch Notes</h1>
+            <div class="spacer"></div>
+            <div id="dd-slot"></div>
+        </div>
+        <div class="timeline" id="timeline"></div>
+    </main>
+
+    <script>
+        loadPatches()
+            .then(patches => {
+                if (patches.length === 0) {
+                    showError('No patches recorded yet.')
+                    return
+                }
+
+                const timeline = document.getElementById('timeline')
+
+                patches.forEach((patch, idx) => {
+                    const card = el('section', 'panel patch-card' + (idx === 0 ? '' : ' collapsed'))
+                    // One Steam announcement can contain several dated sub-patches, so a
+                    // gid is not always unique. The array index is unique on this page.
+                    card.id = 'patch-' + idx
+
+                    const head = el('div', 'card-head')
+                    head.style.cursor = 'pointer'
+
+                    const main = el('div', 'head-main')
+                    const badges = el('div', 'badges')
+                    if (idx === 0) badges.appendChild(el('span', 'badge latest', 'Latest Patch'))
+                    badges.appendChild(typeBadge(patch.patch_type))
+                    main.appendChild(badges)
+                    main.appendChild(el('h2', 'headline', patch.headline))
+                    main.appendChild(el('div', 'meta', fmtDate(patch.posttime) + ' · ' + patchSummary(patch)))
+                    head.appendChild(main)
+
+                    const toggle = el('button', 'toggle-btn', '▼')
+                    toggle.setAttribute('aria-label', 'Toggle patch details')
+                    head.appendChild(toggle)
+
+                    head.addEventListener('click', () => card.classList.toggle('collapsed'))
+
+                    const bodyWrap = el('div', 'card-body')
+                    const inner = el('div', 'card-body-inner')
+                    inner.appendChild(patchBody(patch))
+                    bodyWrap.appendChild(inner)
+
+                    card.appendChild(head)
+                    card.appendChild(bodyWrap)
+                    timeline.appendChild(card)
+                })
+
+                const options = patches.map((p, idx) => ({
+                    label: p.headline,
+                    sub: fmtDate(p.posttime),
+                    value: idx,
+                }))
+                document.getElementById('dd-slot').appendChild(
+                    createDropdown(options, 0, idx => {
+                        const card = document.getElementById('patch-' + idx)
+                        if (!card) return
+                        card.classList.remove('collapsed')
+                        card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                        card.classList.add('flash')
+                        setTimeout(() => card.classList.remove('flash'), 1600)
+                    })
+                )
+            })
+            .catch(err => showError('Could not load patch data: ' + err.message))
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item — Deadlock Patch Tracker</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="static/js/app.js"></script>
+</head>
+<body data-page="items">
+    <div class="page-bg" style="background-image: url('static/Hidden_king_art.webp');"></div>
+
+    <main class="item-detail-main">
+        <div class="page-header">
+            <h1 id="item-title">Item</h1>
+            <div class="spacer"></div>
+            <a href="items.html">Browse all items</a>
+        </div>
+        <div id="item-history"></div>
+    </main>
+
+    <script>
+        // A static host has no route params, so the item name comes from the query
+        // string. Validate against the roster before rendering attacker-controlled text.
+        const ITEM_NAME = new URLSearchParams(location.search).get('name') || ''
+
+        loadRoster()
+            .then(roster => {
+                const KNOWN = roster.items.includes(ITEM_NAME)
+                document.title = (KNOWN ? ITEM_NAME : 'Item') + ' — Deadlock Patch Tracker'
+                document.getElementById('item-title').textContent = KNOWN ? ITEM_NAME : 'Unknown item'
+
+                const history = document.getElementById('item-history')
+
+                if (!KNOWN) {
+                    const card = el('section', 'panel')
+                    card.appendChild(el('div', 'empty-state',
+                        ITEM_NAME ? `Unknown item: ${ITEM_NAME}` : 'No item specified.'))
+                    history.appendChild(card)
+                    return
+                }
+
+                loadPatches()
+                    .then(patches => {
+                        const entries = itemHistory(patches, ITEM_NAME)
+
+                        if (entries.length === 0) {
+                            const card = el('section', 'panel')
+                            card.appendChild(el('div', 'empty-state',
+                                'No recorded changes for ' + ITEM_NAME + ' yet.'))
+                            history.appendChild(card)
+                            return
+                        }
+
+                        entries.forEach((entry, idx) => {
+                            const card = el('section', 'panel patch-card' + (idx === 0 ? '' : ' collapsed'))
+
+                            const head = el('div', 'card-head')
+                            head.style.cursor = 'pointer'
+
+                            const main = el('div', 'head-main')
+                            if (idx === 0) {
+                                const badges = el('div', 'badges')
+                                badges.appendChild(el('span', 'badge latest', 'Most Recent'))
+                                main.appendChild(badges)
+                            }
+                            main.appendChild(el('h2', 'headline', entry.patch_name))
+                            main.appendChild(el('div', 'meta', fmtDate(entry.posttime)))
+                            head.appendChild(main)
+
+                            const toggle = el('button', 'toggle-btn', '▼')
+                            toggle.setAttribute('aria-label', 'Toggle patch details')
+                            head.appendChild(toggle)
+
+                            head.addEventListener('click', () => card.classList.toggle('collapsed'))
+
+                            const bodyWrap = el('div', 'card-body')
+                            const inner = el('div', 'card-body-inner')
+                            inner.appendChild(itemChangesFrag(entry))
+                            bodyWrap.appendChild(inner)
+
+                            card.appendChild(head)
+                            card.appendChild(bodyWrap)
+                            history.appendChild(card)
+                        })
+                    })
+                    .catch(err => showError('Could not load patch data: ' + err.message))
+            })
+            .catch(err => showError('Could not load the item roster: ' + err.message))
+    </script>
+</body>
+</html>

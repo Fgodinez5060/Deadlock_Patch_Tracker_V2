@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deadlock Patch Tracker</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="static/js/app.js"></script>
+</head>
+<body data-page="home">
+    <header class="home-banner">
+        <div class="banner-text">
+            <h1>Deadlock Patch Tracker</h1>
+            <p>Every hero, item, and general change, all in one place.</p>
+        </div>
+    </header>
+
+    <div class="hero-rail home-rail" id="home-rail"></div>
+
+    <main class="home-main">
+        <section class="panel patch-card" id="patch-panel">
+            <div class="card-head">
+                <div class="head-main">
+                    <div class="badges" id="patch-badges"></div>
+                    <h2 class="headline" id="patch-headline"></h2>
+                    <div class="meta" id="patch-meta"></div>
+                </div>
+                <div id="dd-slot"></div>
+            </div>
+            <div class="changed-strip" id="changed-strip"></div>
+            <div class="card-body">
+                <div class="card-body-inner" id="patch-body"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Unofficial fan project for tracking patch notes. Deadlock, all hero names, imagery,
+        logos, and game content are the property of Valve Corporation. All other resources
+        belong to their respective owners. This site is not affiliated with or endorsed by Valve.</p>
+    </footer>
+
+    <script>
+        loadPatches()
+            .then(patches => {
+                if (patches.length === 0) {
+                    showError('No patches recorded yet.')
+                    return
+                }
+
+                const badges = document.getElementById('patch-badges')
+                const headline = document.getElementById('patch-headline')
+                const meta = document.getElementById('patch-meta')
+                const strip = document.getElementById('changed-strip')
+                const body = document.getElementById('patch-body')
+
+                function show(idx) {
+                    const patch = patches[idx]
+
+                    badges.innerHTML = ''
+                    if (idx === 0) badges.appendChild(el('span', 'badge latest', 'Latest Patch'))
+                    badges.appendChild(typeBadge(patch.patch_type))
+
+                    headline.textContent = patch.headline
+                    meta.textContent = fmtDate(patch.posttime) + ' · ' + patchSummary(patch)
+
+                    strip.innerHTML = ''
+                    Object.keys(patch.heroes || {}).forEach(name => {
+                        const a = el('a')
+                        a.href = heroHref(name)
+                        a.title = name
+                        const img = el('img')
+                        img.src = `static/heroes/${name}.webp`
+                        img.alt = name
+                        a.appendChild(img)
+                        strip.appendChild(a)
+                    })
+
+                    body.innerHTML = ''
+                    body.appendChild(patchBody(patch))
+                }
+
+                const options = patches.map((p, i) => ({
+                    label: p.headline,
+                    sub: fmtDate(p.posttime),
+                    value: i,
+                }))
+                document.getElementById('dd-slot').appendChild(
+                    createDropdown(options, 0, show)
+                )
+
+                show(0)
+            })
+            .catch(err => showError('Could not load patch data: ' + err.message))
+
+        populateHeroRail(document.getElementById('home-rail'), null)
+    </script>
+</body>
+</html>

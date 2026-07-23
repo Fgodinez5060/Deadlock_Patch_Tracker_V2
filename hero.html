@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero — Deadlock Patch Tracker</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="static/js/app.js"></script>
+    <style>
+        /* lock page scroll on desktop; columns scroll internally */
+        @media (min-width: 1001px) {
+            body { overflow: hidden; }
+        }
+    </style>
+</head>
+<body data-page="heroes">
+    <div class="page-bg" style="background-image: url('static/City_buildings.webp');"></div>
+
+    <main class="hero-layout">
+        <div class="hero-history" id="hero-history"></div>
+
+        <div class="hero-feature">
+            <div class="render-wrap">
+                <img class="render" id="hero-render" alt="">
+                <img class="name-plate" id="hero-nameplate" alt="">
+            </div>
+        </div>
+
+        <div class="hero-rail" id="hero-rail"></div>
+    </main>
+
+    <script>
+        // Flask used /hero/<name>; a static host has no route params, so read the query
+        // string. Validate against the roster before touching the DOM: an unchecked name
+        // would request missing assets and inject attacker-controlled text.
+        const HERO_NAME = new URLSearchParams(location.search).get('name') || ''
+
+        loadRoster()
+            .then(roster => {
+                const KNOWN = roster.heroes.includes(HERO_NAME)
+                document.title = (KNOWN ? HERO_NAME : 'Hero') + ' — Deadlock Patch Tracker'
+
+                if (!KNOWN) {
+                    document.querySelector('.hero-feature').remove()
+                    const history = document.getElementById('hero-history')
+                    const card = el('section', 'panel')
+                    card.appendChild(el('div', 'empty-state',
+                        HERO_NAME ? `Unknown hero: ${HERO_NAME}` : 'No hero specified.'))
+                    const back = el('a', '', 'Browse all heroes')
+                    back.href = 'heroes.html'
+                    card.appendChild(back)
+                    history.appendChild(card)
+                } else {
+                    const render = document.getElementById('hero-render')
+                    render.src = `static/render/${HERO_NAME}_Render.webp`
+                    render.alt = HERO_NAME
+                    const plate = document.getElementById('hero-nameplate')
+                    plate.src = `static/hero_name/${HERO_NAME}_name.svg`
+                    plate.alt = HERO_NAME
+
+                    loadPatches()
+                        .then(patches => {
+                            const entries = heroHistory(patches, HERO_NAME)
+                            const history = document.getElementById('hero-history')
+
+                            if (entries.length === 0) {
+                                const card = el('section', 'panel')
+                                card.appendChild(el('div', 'empty-state',
+                                    'No recorded changes for ' + HERO_NAME + ' yet.'))
+                                history.appendChild(card)
+                                return
+                            }
+
+                            entries.forEach((entry, idx) => {
+                                const card = el('section', 'panel patch-card' + (idx === 0 ? '' : ' collapsed'))
+
+                                const head = el('div', 'card-head')
+                                head.style.cursor = 'pointer'
+
+                                const main = el('div', 'head-main')
+                                if (idx === 0) {
+                                    const badges = el('div', 'badges')
+                                    badges.appendChild(el('span', 'badge latest', 'Most Recent'))
+                                    main.appendChild(badges)
+                                }
+                                main.appendChild(el('h2', 'headline', entry.patch_name))
+                                main.appendChild(el('div', 'meta', fmtDate(entry.posttime)))
+                                head.appendChild(main)
+
+                                const toggle = el('button', 'toggle-btn', '▼')
+                                toggle.setAttribute('aria-label', 'Toggle patch details')
+                                head.appendChild(toggle)
+
+                                head.addEventListener('click', () => card.classList.toggle('collapsed'))
+
+                                const bodyWrap = el('div', 'card-body')
+                                const inner = el('div', 'card-body-inner')
+                                inner.appendChild(heroChangesFrag(entry))
+                                bodyWrap.appendChild(inner)
+
+                                card.appendChild(head)
+                                card.appendChild(bodyWrap)
+                                history.appendChild(card)
+                            })
+                        })
+                        .catch(err => showError('Could not load patch data: ' + err.message))
+                }
+
+                populateHeroRail(document.getElementById('hero-rail'), KNOWN ? HERO_NAME : null)
+            })
+            .catch(err => showError('Could not load the hero roster: ' + err.message))
+    </script>
+</body>
+</html>

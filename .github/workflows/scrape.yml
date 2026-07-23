@@ -1,0 +1,43 @@
+name: Scrape and publish patches
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # every 6 hours
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scrape-and-publish
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch and parse new Steam announcements
+        run: python scrape/build.py
+
+      - name: Validate patches.json
+        run: python scrape/validate.py
+
+      - name: Commit and push if data/patches.json changed
+        run: |
+          if git diff --quiet -- data/patches.json; then
+            echo "No changes to publish."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/patches.json
+          git commit -m "Auto-update patches.json"
+          git push

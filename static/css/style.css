@@ -902,4 +902,18 @@ ul.change-list {
         white-space: nowrap;
     }
     .info-btn { width: 28px; height: 28px; font-size: 15px; flex-shrink: 0; }
+
+    /* home page only: its patch card puts the "jump to patch" dropdown directly
+       beside the headline in .card-head, and .dd never shrinks (flex: 0 0 auto), so
+       on a narrow phone it eats most of the row and squeezes the headline/meta text
+       down to almost nothing, wrapping word-by-word. Stack them instead so the
+       headline always gets the card's full width. Scoped to #patch-panel only -
+       patches.html/hero.html/item.html's .card-head has a toggle button here
+       instead of a dropdown and already works fine, so leave those alone. */
+    #patch-panel .card-head {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    #patch-panel #dd-slot { align-self: flex-start; }
 }

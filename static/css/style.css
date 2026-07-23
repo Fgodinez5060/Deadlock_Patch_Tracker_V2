@@ -873,3 +873,19 @@ ul.change-list {
     .hero-cols { grid-template-columns: 1fr; }
     .hero-tile { width: 84px; }
 }
+
+/* phones: the 1000px breakpoint above isn't tight enough - logo + 3 links + info
+   button don't fit on one line under ~430px, so text wraps inside the fixed-height
+   nav and becomes unclickable. Shrink everything enough to stay on one line instead. */
+@media (max-width: 480px) {
+    nav { padding: 0 10px; gap: 4px; }
+    nav .logo { height: 1.9em; }
+    nav ul { margin-left: 6px; gap: 0; }
+    nav ul a {
+        font-size: 12px;
+        padding: 5px 6px;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+    }
+    .info-btn { width: 28px; height: 28px; font-size: 15px; }
+}
